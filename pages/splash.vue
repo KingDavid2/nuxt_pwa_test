@@ -69,7 +69,6 @@
 export default {
   layout: 'splash',
 
-  transition: 'bounce',
 
 
   data() {

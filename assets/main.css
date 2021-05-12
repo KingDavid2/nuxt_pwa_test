@@ -18,6 +18,16 @@
   opacity: 0;
 }
 
+.test-transition-enter-active,
+.test-transition-leave-active {
+  transition: all 0.5s;
+}
+
+.test-transition-enter,
+.test-transition-leave-to {
+  opacity: 0;
+}
+
 /* .page-enter,
 .layout-enter {
   transform: translateX(200px);
@@ -28,7 +38,7 @@
   transform: translateX(-200px);
 } */
 
-.bounce-enter-active {
+/* .bounce-enter-active {
   transform-origin: top;
   animation: bounce-in 0.8s;
 }
@@ -64,4 +74,4 @@
   100% {
     transform: scale(0);
   }
-}
+} */

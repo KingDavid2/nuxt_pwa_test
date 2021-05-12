@@ -5,7 +5,6 @@
     v-model="drawer"
     clipped
     app
-    absolute
   >
     <v-list >
       <v-list-item
@@ -35,7 +34,8 @@
         v-for="item in items"
         :key="item.title"
         link
-        @click="showTitle(item.title)"
+        nuxt
+        :to="item.link"
       >
         <v-list-item-icon>
           {{ item.number }}
@@ -64,9 +64,9 @@ export default {
       mini: true,
       nmini: false,
       items: [
-        { id: 1, icon: 'mdi-clock', number: 'I', title: 'Lorem ipsum' },
-        { id: 2, icon: 'mdi-account', number: 'II', title: 'dolor sit amet' },
-        { id: 3, icon: 'mdi-flag', number: 'III', title: 'consectetur adipiscing elit' },
+        { id: 1, icon: 'mdi-clock', number: 'I', title: 'Lorem ipsum', link: '/texts/1' },
+        { id: 2, icon: 'mdi-account', number: 'II', title: 'dolor sit amet', link: '/texts/2' },
+        { id: 3, icon: 'mdi-flag', number: 'III', title: 'consectetur adipiscing elit', link: '/texts/3' },
       ],
     }
   },

@@ -109,7 +109,7 @@ export default {
 
 }
 </script>
-<style>
+<style scoped>
   #place{
     bottom: 0;
     height: 100px;

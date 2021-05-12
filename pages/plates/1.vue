@@ -1,6 +1,6 @@
 <template>
 <div>
-  index
+  plate 1
 </div>
 </template>
 

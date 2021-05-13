@@ -1,7 +1,17 @@
 <template>
-  <div>
-    <div id="svg12" ></div>
-  </div>
+  <v-row>
+    <v-col>
+      <div id="svg12" ></div>
+    </v-col>
+    <v-col>
+      <v-color-picker
+        v-if="showColorPicker"
+        v-model="color"
+        elevation="15"
+        >
+      </v-color-picker>
+    </v-col>
+  </v-row>
 </template>
 
 <script>
@@ -17,7 +27,13 @@ export default {
       activeEl: null,
       clickHandler: null,
       dragging: false,
-      el: null
+      el: null,
+      svgUpdated: false,
+      showColorPicker: false,
+      type: 'hex',
+      hex: null
+
+      // colorPickerColor: '#000'
     }
   },
   mounted() {
@@ -30,16 +46,39 @@ export default {
                                                 this.addHandlerToSVG();
                                         } );
     this.svg = s
-
+    this.setHandlers()
   },
+
   methods: {
+    setHandlers(){
+    },
+    style2object(style){
+      let json = style.split(';').filter(s => s.length)
+        .reduce((a, b) => {
+           const keyValue = b.split(':');
+           a[keyValue[0]] = keyValue[1] ; 
+           return a;
+    } ,{})
+    return json
+    },
     addHandlerToSVG() {
-      this.svg.click( ( ev ) => { this.getEventElement( ev ) } )
+      this.svg.click( ( ev ) => {
+        this.showColorPicker = false
+        this.getEventElement( ev )
+      } )
+      this.svg.dblclick( ( ev ) => {
+        this.getEventElement( ev )
+        this.showColorPicker = true
+        if( ev.target.localName != 'svg' )
+          this.color = this.style2object(Snap(ev.target).attr().style).fill
+
+      } )
     },
     getEventElement( ev ) {
       if( ev.target.localName == 'svg' ) { return; };
-      var snapEl = Snap(ev.target); 
+      var snapEl = Snap(ev.target);
       this.firstSelectedEl = snapEl;
+
       this.highlightEl( snapEl );
     },
     highlightEl( el ) {
@@ -52,8 +91,9 @@ export default {
       this.highlightRect.transform( el.transform().global.toString() );
 
       this.lastSelectedEl = el;
-      
+
       this.el = el
+
       el.drag( this.dragMove, this.dragStart, this.dragEnd);
     },
     rectObjFromBB ( bb ) {
@@ -74,6 +114,34 @@ export default {
         this.el.data('origTransform', this.el.transform().local );
     }
   },
+  computed: {
+    color: {
+      get () {
+        console.log(this)
+        return this[this.type]
+      },
+      set (v) {
+        if(this.el != null && v != null ){
+
+          let style = this.el.attr().style
+
+          let newStyle = {...this.style2object(style),
+                          fill: this[this.type]}
+          this.el.attr(newStyle)
+          this[this.type] = v
+        }
+      },
+    },
+    showColor () {
+      if (typeof this.color === 'string') return this.color
+
+      return JSON.stringify(Object.keys(this.color).reduce((color, key) => {
+        color[key] = Number(this.color[key].toFixed(2))
+        return color
+      }, {}), null, 2)
+    },
+
+  }
 
 }
 </script>

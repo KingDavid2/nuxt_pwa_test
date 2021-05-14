@@ -4,6 +4,29 @@
       <div id="svg12" ></div>
     </v-col>
     <v-col>
+      <v-btn
+        elevation="2"
+        @click="generateSVGString"
+      >
+        Generate New SVG String
+      </v-btn>
+      <br>
+      <v-text-field
+        v-model="svgName"
+        label="SVG new name"
+      ></v-text-field>
+      <v-btn
+        elevation="2"
+        @click="saveSvgFile"
+      >
+        Download SVG
+      </v-btn>
+      <v-btn
+        elevation="2"
+        @click="appendSvgFile"
+      >
+        Append SVG
+      </v-btn>
       <v-color-picker
         v-if="showColorPicker"
         v-model="color"
@@ -31,7 +54,8 @@ export default {
       svgUpdated: false,
       showColorPicker: false,
       type: 'hex',
-      hex: null
+      hex: null,
+      svgName: ''
 
       // colorPickerColor: '#000'
     }
@@ -112,7 +136,33 @@ export default {
     },
     dragStart( x,y,ev ) {
         this.el.data('origTransform', this.el.transform().local );
-    }
+    },
+    generateSVGString(){
+      let svg = document.getElementById('svg12').firstElementChild
+      console.log(new XMLSerializer().serializeToString(svg));
+    },
+    saveSvgFile() {
+      let svg = document.getElementById('svg12').firstElementChild
+      svg.setAttribute('version', '1.1');
+      svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      var markup = svg.outerHTML;
+      var b64 = btoa(markup);
+      var aEl = document.createElement('a');
+      aEl.setAttribute('download', this.svgName + '.svg');
+      aEl.href = 'data:image/svg+xml;base64,\n' + b64;
+      document.body.appendChild(aEl);
+      aEl.click();
+    },
+    appendSvgFile() {
+      // loadedFragment.node.firstElementChild.children[0]
+      let temp = Snap.load("/svg/a1.svg", ( loadedFragment ) => {
+                      let oldParent = loadedFragment.node.firstElementChild
+                      let newParent = document.getElementById('svg12').firstElementChild
+                      while (oldParent.childNodes.length > 0) {
+                        newParent.appendChild(oldParent.childNodes[0]);
+                      }
+                      });
+    },
   },
   computed: {
     color: {

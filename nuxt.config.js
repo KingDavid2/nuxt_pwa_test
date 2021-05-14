@@ -30,6 +30,7 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+    '@nuxtjs/pwa',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
   ],
@@ -48,8 +49,11 @@ export default {
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
     manifest: {
-      lang: 'en'
-    }
+      name: 'Interaction of Color',
+      short_name: 'Interaction of Color',
+      lang: 'en',
+      display: 'standalone',
+    },
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify

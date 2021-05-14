@@ -1,5 +1,5 @@
 <template>
-  <v-row  justify="center" align="center">
+  <v-row class="smooth-transtion" justify="center" align="center" :style="`margin-left: ${getMainMarginLeft} `">
     <v-col cols="12" sm="12" md="12">
       <div class="text-center">
         <logo />
@@ -57,6 +57,7 @@ Sed aliquet hendrerit orci eu pharetra. Nam nec nisl in tortor lacinia fringilla
 <script>
 import Logo from '~/components/Logo.vue'
 import VuetifyLogo from '~/components/VuetifyLogo.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   pageTransition: 'test-transition',
@@ -73,6 +74,11 @@ export default {
     Logo,
     VuetifyLogo,
   },
+  computed: {
+    ...mapGetters([
+      'getMainMarginLeft'
+      ]),
+  },
     data () {
       return {
         show: false,
@@ -85,6 +91,8 @@ export default {
   .font-grey{
     color: red;
     }
-
+  .smooth-transtion{
+    transition: all 0.25s linear;
+  }
 </style>
 

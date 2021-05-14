@@ -25,9 +25,10 @@
     width='500px'
     v-model="drawer"
     :mini-variant.sync="mini"
-    
+    permanent
     clipped
     app
+
   >
     <v-list dense v-if="view == 1" >
       <v-list-item
@@ -36,6 +37,7 @@
         link
         nuxt
         :to="item.link"
+        @click="changeMargin()"
       >
         <v-list-item-icon>
           {{ item.number }}
@@ -58,6 +60,7 @@
 
 <script>
 import LeftDrawerSvg from '~/components/LeftDrawerSvg.vue'
+import { mapActions } from 'vuex'
 
 export default {
   pageTransition: 'test-transition',
@@ -94,9 +97,13 @@ export default {
   created() {
   },
   methods: {
+    ...mapActions([
+      'setMainMarginLeft',
+    ]),
     onClickOutside () {
       this.mini = true
       this.nmini = false
+      this.setMainMarginLeft('0px')
     },
     changeDrawer(id) {
       this.view = id
@@ -104,6 +111,9 @@ export default {
     },
     showTitle(title) {
       console.log(title)
+    },
+    changeMargin(){
+      this.setMainMarginLeft('300px')
     }
   },
 }

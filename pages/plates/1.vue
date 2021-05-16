@@ -30,14 +30,24 @@
       <v-file-input
         v-model="newFile"
         id="file-input"
-        accept="image/svg+xml, image/svg"
+        accept="image/svg+xml"
         @change="onFileChange"
         hide-input
       ></v-file-input>
+      <v-btn
+        v-if="showColorPicker"
+        elevation="2"
+        @click="defaultSwatches = !defaultSwatches"
+      >
+        {{!defaultSwatches ? 'Show default palette' : 'Show all palette '}}
+      </v-btn>
       <v-color-picker
         v-if="showColorPicker"
         v-model="color"
         elevation="15"
+        show-swatches
+        :swatches="defaultSwatches ? swatches : undefined"
+        swatches-max-height="300px"
         >
       </v-color-picker>
     </v-col>
@@ -64,7 +74,15 @@ export default {
       type: 'hex',
       hex: null,
       svgName: '',
-      newFile:''
+      newFile:'',
+      defaultSwatches: true,
+      swatches: [
+        ['#FF0000', '#AA0000', '#550000'],
+        ['#FFFF00', '#AAAA00', '#555500'],
+        ['#00FF00', '#00AA00', '#005500'],
+        ['#00FFFF', '#00AAAA', '#005555'],
+        ['#0000FF', '#0000AA', '#000055'],
+      ],
 
       // colorPickerColor: '#000'
     }
@@ -182,13 +200,13 @@ export default {
       },
       set (v) {
         if(this.el != null && v != null ){
+          this[this.type] = v
 
           let style = this.el.attr().style
 
           let newStyle = {...this.style2object(style),
                           fill: this[this.type]}
           this.el.attr(newStyle)
-          this[this.type] = v
         }
       },
     },

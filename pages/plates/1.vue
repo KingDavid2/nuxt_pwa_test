@@ -3,7 +3,7 @@
     <v-col>
       <div id="svg12" ></div>
     </v-col>
-    <v-col>
+    <v-col cols="3">
       <v-btn
         elevation="2"
         @click="generateSVGString"
@@ -27,6 +27,13 @@
       >
         Append SVG
       </v-btn>
+      <v-file-input
+        v-model="newFile"
+        id="file-input"
+        accept="image/svg+xml, image/svg"
+        @change="onFileChange"
+        hide-input
+      ></v-file-input>
       <v-color-picker
         v-if="showColorPicker"
         v-model="color"
@@ -38,6 +45,7 @@
 </template>
 
 <script>
+import Snap from 'snapsvg-cjs';
 
 
 export default {
@@ -55,7 +63,8 @@ export default {
       showColorPicker: false,
       type: 'hex',
       hex: null,
-      svgName: ''
+      svgName: '',
+      newFile:''
 
       // colorPickerColor: '#000'
     }
@@ -142,10 +151,7 @@ export default {
       console.log(new XMLSerializer().serializeToString(svg));
     },
     saveSvgFile() {
-      let svg = document.getElementById('svg12').firstElementChild
-      svg.setAttribute('version', '1.1');
-      svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-      var markup = svg.outerHTML;
+      var markup = this.svg.outerSVG()
       var b64 = btoa(markup);
       var aEl = document.createElement('a');
       aEl.setAttribute('download', this.svgName + '.svg');
@@ -154,15 +160,19 @@ export default {
       aEl.click();
     },
     appendSvgFile() {
-      // loadedFragment.node.firstElementChild.children[0]
-      let temp = Snap.load("/svg/a1.svg", ( loadedFragment ) => {
-                      let oldParent = loadedFragment.node.firstElementChild
-                      let newParent = document.getElementById('svg12').firstElementChild
-                      while (oldParent.childNodes.length > 0) {
-                        newParent.appendChild(oldParent.childNodes[0]);
-                      }
-                      });
+      document.getElementById('file-input').click();
     },
+    onFileChange(){
+      if (this.newFile == null) return
+      let url = window.location.origin + "/svg/" + this.newFile.name
+      let temp = Snap.load(url, ( loadedFragment ) => {
+                let oldParent = loadedFragment.node.firstElementChild
+                let newParent = document.getElementById('svg12').firstElementChild
+                while (oldParent.childNodes.length > 0) {
+                  newParent.appendChild(oldParent.childNodes[0]);
+                }
+                });
+    }
   },
   computed: {
     color: {
